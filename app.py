@@ -89,6 +89,16 @@ def crear_libro():
     db.session.commit()
     return jsonify({"mensaje": "Libro guardado", "id": libro.id}), 201
 
+@app.get("/biblioteca")
+def listar_biblioteca():
+    libros = LibroGuardado.query.order_by(LibroGuardado.id.desc()).all()
+    return jsonify([{
+        "id": libro.id,
+        "titulo": libro.titulo,
+        "autor": libro.autor,
+        "isbn": libro.isbn,
+        "anio": libro.anio
+    } for libro in libros]), 200
 
 
 if __name__ == "__main__":
