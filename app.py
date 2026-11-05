@@ -20,6 +20,14 @@ def registrar(criterio, termino):
     db.session.add(Busqueda(criterio=criterio, termino=termino))
     db.session.commit()
 
+@app.get("/libros/buscar")
+def buscar_titulo():
+    titulo = (request.args.get("titulo") or "").strip()
+    if len(titulo) < 2:
+        return jsonify({"error": "titulo debe tener al menos 2 caracteres"}), 400
+    resultados = buscar("title", titulo)
+    registrar("titulo", titulo)
+    return jsonify({"consulta": titulo, "total": len(resultados), "resultados": resultados}), 200
 
 
 if __name__ == "__main__":
