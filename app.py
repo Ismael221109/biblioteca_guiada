@@ -54,6 +54,15 @@ def libro_por_isbn(isbn):
         "editoriales": libro.get("publishers", [])
     }), 200
 
+@app.get("/historial")
+def historial():
+    registros = Busqueda.query.order_by(Busqueda.id.desc()).limit(50).all()
+    return jsonify([{
+        "id": r.id, 
+        "criterio": r.criterio,
+        "termino": r.termino, 
+        "fecha": r.fecha.isoformat()
+    } for r in registros]), 200
 
 if __name__ == "__main__":
     with app.app_context():
