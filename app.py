@@ -83,12 +83,11 @@ def crear_libro():
     if anio is not None and (type(anio) is not int or not 0 < anio <= 2100):
         return jsonify({"error": "anio debe ser un entero válido"}), 400
     if LibroGuardado.query.filter_by(isbn=isbn).first():
-        return jsonify({"error": "El libro ya existe"}), 400
-
-    nuevo_libro = LibroGuardado(titulo=titulo, autor=autor, isbn=isbn, anio=anio)
-    db.session.add(nuevo_libro)
+        return jsonify({"error": "El ISBN ya está guardado"}), 409
+    libro = LibroGuardado(titulo=titulo, autor=autor, isbn=isbn, anio=anio)
+    db.session.add(libro)
     db.session.commit()
-    return jsonify({"mensaje": "Libro creado"}), 201
+    return jsonify({"mensaje": "Libro guardado", "id": libro.id}), 201
 
 
 
