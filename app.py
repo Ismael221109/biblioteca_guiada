@@ -29,6 +29,15 @@ def buscar_titulo():
     registrar("titulo", titulo)
     return jsonify({"consulta": titulo, "total": len(resultados), "resultados": resultados}), 200
 
+@app.get("/libros/autor")
+def buscar_autor():
+    nombre = (request.args.get("nombre") or "").strip()
+    if len(nombre) < 2:
+        return jsonify({"error": "nombre debe tener al menos 2 caracteres"}), 400
+    resultados = buscar("author", nombre)
+    registrar("autor", nombre)
+    return jsonify({"consulta": nombre, "total": len(resultados), "resultados": resultados}), 200
+
 
 if __name__ == "__main__":
     with app.app_context():
