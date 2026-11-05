@@ -100,6 +100,16 @@ def listar_biblioteca():
         "anio": libro.anio
     } for libro in libros]), 200
 
+@app.delete("/biblioteca/<int:id>")
+def eliminar_libro(id):
+    libro = db.session.get(LibroGuardado, id)
+    if libro is None:
+        return jsonify({"error": "Libro no encontrado"}), 404
+    db.session.delete(libro)
+    db.session.commit()
+    return jsonify({"mensaje": "Libro eliminado", "id": id}), 200
+
+
 
 if __name__ == "__main__":
     with app.app_context():
