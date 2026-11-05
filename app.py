@@ -38,6 +38,22 @@ def buscar_autor():
     registrar("autor", nombre)
     return jsonify({"consulta": nombre, "total": len(resultados), "resultados": resultados}), 200
 
+@app.get("/libros/isbn/<isbn>")
+def libro_por_isbn(isbn):
+    if not (isbn.isdigit() and len(isbn) in (10, 13)):
+        return jsonify({"error": "ISBN debe contener 10 o 13 dígitos"}), 400
+    try:
+        libro = consultar_isbn(isbn)
+    except OpenLibraryError:
+        return jsonify({"error": "No fue posible obtener el ISBN"}), 502
+    registrar("isbn", isbn)
+    return jsonify({
+        "isbn": isbn, 
+        "titulo": libro.get("title"),
+        "fecha_publicacion": libro.get("publish_date"),
+        "editoriales": libro.get("publishers", [])
+    }), 200
+
 
 if __name__ == "__main__":
     with app.app_context():
